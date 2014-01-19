@@ -15,7 +15,16 @@ dpkg_package "splunkforwarder" do
 	source		"/tmp/splunkforwarder-6.0.1-189883-linux-2.6-amd64.deb"
 end
 
+service 'splunk' do
+  action [:enable]
+  supports :status => true, :start => true, :stop => true, :restart => true
+end
+
 splunk_bin = node[:splunkforwarder][:bin]
+
+execute "#{splunk_bin} start" do
+	not_if "/etc/init.d/splunk status"
+end
 
 execute "#{splunk_bin} enable boot-start --accept-license --answer-yes" do
 	not_if{ File.symlink?("/etc/rc4.d/S20splunk") }
@@ -27,10 +36,6 @@ end
 
 execute "#{splunk_bin} login -auth #{node[:splunkforwarder][:admin][:username]}:#{node[:splunkforwarder][:admin][:password]}"
 
-service 'splunk' do
-  action [:start]
-  supports :status => true, :start => true, :stop => true, :restart => true
-end
 
 execute "#{splunk_bin} add forward-server #{node[:splunkforwarder][:forward_server]}" do
 	not_if "#{splunk_bin} list forward-servers | grep #{node[:splunkforwarder][:forward_server]}"
