@@ -1,0 +1,11 @@
+{
+	"id": "matt",
+	"password": "$1$EYWUbp.C$XkfRl8RiwWYA1hsb7Ur7x1",
+	"ssh_keys": [
+		"ssh-dss AAAAB3NzaC1kc3MAAACBAK+yHSSoEW9PS/NTzIRkCKLnDsnieL+nmW1i1xv0IWAPqx6+YQ4H40EXWdxpUkodZc3ybMuxCBkeJZfhk6cCVqlZE9LLAdXQnTrP0KvsgHMIfmKqks+/3FneTGwyjLmQUVM868g1u3j9e1VyCNRz31OiJvxYqfj/f8n9If2M7btNAAAAFQCM9ojptcK0tb8YooOFPg+yaUd9bQAAAIA6ic3oNtmD+e9srvM3U2kjnfMIUjoEPMf/ioukBbuwQUm5uib4h2MqgKl8jtA3iXlE3f14k3kdSQqqHqL8ftGOY60fVDgSjn3MBwrTnhK3CB78dtUxkXZYOrreThlCuElwKbXAH4ySVCy30a3dnSgY0fmVja5HHT1kt0Ix+JqgPQAAAIATYNJIEl1d5pkIY2YJf/O/R54VF6sbt3LvO5LrqDEswPilV9b9Ny/2xBgUipTyA9thPxi/L+deFNa7MU42yKjhXNyh+UU1DVB3ME3/SNiUrwtYamUEE78D/lU0Ftev1d75rJWJMs9jVz/lJ/LsfTy14seh9amCgL/QfFRGeko62g=="
+	],
+	"groups": ["sysadmin", "admin"],
+	"uid": 2001,
+	"shell": "\/bin\/bash",
+	"comment": "Matt Harris"
+}
