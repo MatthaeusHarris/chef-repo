@@ -27,6 +27,11 @@ execute "patch_unix_app_setup" do
 	notifies	:run, "execute[enable_nix_scripted_inputs]"
 end
 
+directory "/usr/local/nictool/server" do
+	action	:create
+	
+end
+
 execute "enable_nix_scripted_inputs" do
 	env 		({ "HOME" => "/tmp" })
 	command "/opt/splunkforwarder/bin/splunk login -auth #{splunk_auth_info}; /opt/splunkforwarder/bin/splunk cmd /opt/splunkforwarder/etc/apps/Splunk_TA_nix/bin/setup.sh --enable-all --auth #{splunk_auth_info}"
