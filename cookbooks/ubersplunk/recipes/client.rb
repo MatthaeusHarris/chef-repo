@@ -57,7 +57,7 @@ nix_app_inputs = [
 end
 
 execute "patch_unix_app_setup" do
-	# action :nothing
+	action :nothing
 	command 'sed -i "s/^#\!\/bin\/sh$/#\!\/bin\/bash/" /opt/splunkforwarder/etc/apps/Splunk_TA_nix/bin/setup.sh'
 	nix_app_inputs.each do |input|	
 		notifies	:run, "execute[enable_#{input}]", :immediately
@@ -70,12 +70,12 @@ nix_app_inputs.each do |input|
 						"HOME" => "/tmp",
 						"server_app_name" => "Splunk_TA_nix"
 					})
-		command 	"/opt/splunkforwarder/bin/splunk cmd /opt/splunkforwarder/etc/apps/Splunk_TA_nix/bin/setup.sh --enable-input #{input} --auth #{splunk_auth_info}"
-		# action		:nothing
+		command 	"/opt/splunkforwarder/bin/splunk login -auth #{splunk_auth_info}; /opt/splunkforwarder/bin/splunk cmd /opt/splunkforwarder/etc/apps/Splunk_TA_nix/bin/setup.sh --enable-input #{input} --auth #{splunk_auth_info} 2>&1"
+		action		:nothing
 		notifies	:restart, 'service[splunk]', :delayed
 	end
 end
 
-execute "debug_shit" do
-	command		"/opt/splunkforwarder/bin/splunk display app -auth #{splunk_auth_info}"
+apt_package "sysstat" do
+	action	:install
 end
