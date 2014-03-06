@@ -33,9 +33,15 @@ directory "/usr/local/nictool/server" do
 end
 
 execute "enable_nix_scripted_inputs" do
-	env 		({ "HOME" => "/tmp" })
-	command "/opt/splunkforwarder/bin/splunk login -auth #{splunk_auth_info}; /opt/splunkforwarder/bin/splunk cmd /opt/splunkforwarder/etc/apps/Splunk_TA_nix/bin/setup.sh --enable-all --auth #{splunk_auth_info}"
-	action	:nothing
+	env 		({ 
+					"HOME" => "/tmp",
+					"SPLUNK_WEB_NAME" => "splunkweb",
+					"SPLUNK_SERVER_NAME" => "splunkforwarder",
+					"SPLUNK_HOME" => "/opt/splunkforwarder",
+					"SPLUNK_DB" => "/opt/splunkforwarder/var/lib/splunk"
+				})
+	command 	"/opt/splunkforwarder/etc/apps/Splunk_TA_nix/bin/setup.sh --enable-all --auth #{splunk_auth_info}"
+	action		:nothing
 	notifies	:restart, "service[splunk]", :delayed
 end
 
