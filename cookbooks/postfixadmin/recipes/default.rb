@@ -57,9 +57,11 @@ package pkg_php_imap do
   action :install
 end
 
-package pkg_php_mbstring do
-  not_if do pkg_php_mbstring.nil? end
-  action :install
+if pkg_php_mbstring
+  package pkg_php_mbstring do
+    not_if do pkg_php_mbstring.nil? end
+    action :install
+  end
 end
 
 chef_gem 'sequel'
