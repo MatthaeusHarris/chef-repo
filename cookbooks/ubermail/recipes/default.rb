@@ -5,7 +5,7 @@
 # Copyright 2014, Matt Harris
 #
 
-%W(postfix fam courier-pop-ssl courier-imap-ssl 
+%W(postfix postfix-mysql fam courier-pop-ssl courier-imap-ssl 
 	courier-ssl courier-pop courier-imap courier-base
 	libsasl2-2 libsasl2-modules libsasl2-modules-sql 
 	openssl).each do |package|
