@@ -63,10 +63,10 @@ smtpd_sasl_type = dovecot
 smtpd_sasl_path = private/auth
 
 # Virtual mailboxes
-virtual_alias_maps = pgsql:/etc/postfix/pgsql_virtual_alias_maps.cf
-virtual_mailbox_domains = pgsql:/etc/postfix/pgsql_virtual_domain_maps.cf
-virtual_mailbox_maps = pgsql:/etc/postfix/pgsql_virtual_mailbox_maps.cf
-relay_domains = pgsql:/etc/postfix/pgsql_relay_domain_maps.cf
+virtual_alias_maps = mysql:/etc/postfix/mysql_virtual_alias_maps.cf
+virtual_mailbox_domains = mysql:/etc/postfix/mysql_virtual_domain_maps.cf
+virtual_mailbox_maps = mysql:/etc/postfix/mysql_virtual_mailbox_maps.cf
+relay_domains = mysql:/etc/postfix/mysql_relay_domain_maps.cf
 
 # Misc
 smtpd_reject_unlisted_sender = no

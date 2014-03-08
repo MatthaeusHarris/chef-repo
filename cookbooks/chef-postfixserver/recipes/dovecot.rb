@@ -16,7 +16,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-%w(dovecot-common dovecot-imapd dovecot-sieve dovecot-pgsql dovecot-managesieved).each do |pkg|
+%w(dovecot-common dovecot-imapd dovecot-sieve dovecot-mysql dovecot-managesieved).each do |pkg|
   package pkg
 end
 
