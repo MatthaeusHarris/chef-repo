@@ -17,6 +17,8 @@ end
 
 splunk_host = splunk_servers[0]['ipaddress']
 
+log "Registering #{splunk_host} as splunk host for handler"
+
 if splunk_host
 	include_recipe "chef_handler"
 	
