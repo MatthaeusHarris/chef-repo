@@ -9,6 +9,10 @@ include_recipe 'chef-vault'
 
 splunk_auth_info = chef_vault_item(:vault, "splunk_#{node.chef_environment}")['auth']
 
+apt_package "sysstat" do
+	action	:install
+end
+
 [
 	{
 		:app => "sideview_utils", 

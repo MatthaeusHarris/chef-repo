@@ -1,0 +1,15 @@
+MYSQL_SERVER			localhost
+MYSQL_USERNAME			mailauth
+MYSQL_PASSWORD			<%= @node[:mailserver][:db_mailauth_password] %>
+MYSQL_DATABASE			postfix
+MYSQL_OPT				0
+MYSQL_USER_TABLE		mailbox
+MYSQL_CRYPT_PWFIELD		password
+MYSQL_LOGIN_FIELD		username
+MYSQL_HOME_FIELD		'/mail' AS home
+MYSQL_NAME_FIELD		name
+MYSQL_MAILDIR_FIELD		maildir
+MYSQL_QUOTA_FIELD		concat(quota,'S')
+MYSQL_WHERE_CLAUSE		active=1
+MYSQL_UID_FIELD			<%= @node[:etc][:passwd][:postfix][:uid] %>
+MYSQL_GID_FIELD			<%= @node[:etc][:group][:postfix][:gid] %>

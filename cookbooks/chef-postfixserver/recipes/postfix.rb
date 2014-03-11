@@ -17,7 +17,23 @@
 # limitations under the License.
 
 %w(postfix postfix-mysql libsasl2-2).each do |pkg|
-  package pkg
+  apt_package pkg do
+    action  :install
+  end
+end
+
+group "postfix" do
+  action  :create
+end
+
+user "postfix" do
+  action  :create
+end
+
+group "daemon" do
+  action  :modify
+  members "postfix"
+  append  true
 end
 
 service "postfix" do
@@ -25,12 +41,29 @@ service "postfix" do
   action :enable
 end
 
+directory "/mail" do
+  owner   "postfix"
+  group   "postfix"
+  mode    "0755"
+  action  :create
+end
+
 # Get primary IPs of all nodes
 hosts = search(:node, "*:*").map { |n| n["ipaddress"] }
 
+networks = node[:network][:interfaces].keys.map { |iface| 
+  node[:network][:interfaces][iface][:routes] 
+}.reject { |routes| 
+  routes == nil 
+}.flatten.select{ |route| 
+  route[:scope] == "link"
+}.map{|route| 
+  route[:destination]
+}
+
 template "/etc/postfix/main.cf" do
   source "postfix/main.cf.erb"
-  variables(:mynetworks => hosts)
+  variables(:mynetworks => networks)
   mode 0644
   owner "root"
   group "root"
@@ -42,6 +75,14 @@ template "/etc/postfix/master.cf" do
   mode 0644
   owner "root"
   group "root"
+  notifies :restart, resources(:service => "postfix")
+end
+
+template "/etc/postfix/sasl/smtpd.conf" do
+  source  "postfix/sasl_smtpd.conf.erb"
+  mode    0644
+  owner   "postfix"
+  group   "postfix"
   notifies :restart, resources(:service => "postfix")
 end
 

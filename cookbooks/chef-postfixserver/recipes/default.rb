@@ -33,31 +33,42 @@
 #     not_if "/opt/chef/embedded/bin/gem which pg"
 # end.run_action(:run)  
 
-# include_recipe "database"
+include_recipe "database::mysql"
+include_recipe "mysql::server"
 
-# # generate all passwords
-# %w(db_mailadmin_password db_mailauth_password).each do |pass|
-#   node.normal_unless['mailserver'][pass] = secure_password
-# end
+# generate all passwords
+%w(db_mailadmin_password db_mailauth_password).each do |pass|
+  node.normal_unless['mailserver'][pass] = secure_password
+end
+
+db_connection = { :host => 'localhost', :username => 'root', :password => node['mysql']['server_root_password']}
+
 
 # db_connection = { :host => 'localhost', :username => 'postgres', :password => node[:postgresql][:password][:postgres] }
+mysql_database 'postfix' do
+  connection db_connection
+  action :create
+end
 
-# postgresql_database_user 'mailadmin' do
-#   connection db_connection
-#   password node['mailserver']['db_mailadmin_password'] 
-#   action :create
-# end
+mysql_database_user 'mailadmin' do
+  connection 	db_connection
+  password 		node['mailserver']['db_mailadmin_password'] 
+  action 		[ :create, :grant ]
+  database_name	'postfix'
+  host			'localhost'
+  privileges	[:select, :update, :insert]
+end
 
-# postgresql_database_user 'mailauth' do
-#   connection db_connection
-#   password node['mailserver']['db_mailauth_password'] 
-#   action :create
-# end
+mysql_database_user 'mailauth' do
+  connection 	db_connection
+  password 		node['mailserver']['db_mailauth_password'] 
+  action 		[ :create, :grant ]
+  database_name	'postfix'
+  host			'localhost'
+  privileges	[:select, :update, :insert]
+end
 
-# postgresql_database 'mailconfig' do
-#   connection db_connection
-#   action :create
-# end
+
 
 # mailconfig_sql = <<END
 # --
@@ -723,9 +734,11 @@
 #   subscribes :query, resources("postgresql_database[mailconfig]"), :immediately
 # end
 
-include_recipe "chef-postfixserver::dovecot"
+# include_recipe "chef-postfixserver::dovecot"
+include_recipe "chef-postfixserver::postfix"
+include_recipe "chef-postfixserver::courier"
 include_recipe "chef-postfixserver::amavis"
 include_recipe "chef-postfixserver::clamav"
 include_recipe "chef-postfixserver::spamassassin"
-include_recipe "chef-postfixserver::postfix"
+
 # include_recipe "chef-mailserver::postfixadmin"

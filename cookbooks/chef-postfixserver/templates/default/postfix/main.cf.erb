@@ -27,17 +27,11 @@ mynetworks = <%= @mynetworks.join(', ') %>, 127.0.0.0/8
 
 # DELIVERY TO MAILBOX
 #
-home_mailbox = .maildir/
-
-# The mailbox_command parameter specifies the optional external
-# command to use instead of mailbox delivery. The command is run as
-# the recipient with proper HOME, SHELL and LOGNAME environment settings.
-# Exception:  delivery for root is done as $default_user.
-#
-# IF YOU USE THIS TO DELIVER MAIL SYSTEM-WIDE, YOU MUST SET UP AN
-# ALIAS THAT FORWARDS MAIL FOR ROOT TO A REAL USER.
-#
-mailbox_command = /usr/lib/dovecot/deliver
+virtual_gid_maps = static:<%= node[:etc][:group][:postfix][:gid] %>
+virtual_mailbox_base = /mail
+virtual_minimum_uid = <%= node[:etc][:passwd][:postfix][:uid] %>
+virtual_transport = virtual
+virtual_uid_maps = static:<%= node[:etc][:passwd][:postfix][:uid] %>
 
 
 # SHOW SOFTWARE VERSION OR NOT
@@ -54,19 +48,17 @@ mailbox_command = /usr/lib/dovecot/deliver
 
 
 # Dovecot
-dovecot_destination_recipient_limit = 1
-virtual_transport = dovecot
+# dovecot_destination_recipient_limit = 1
+# virtual_transport = dovecot
 
 # SMTP Auth
 smtpd_sasl_auth_enable = yes
-smtpd_sasl_type = dovecot
-smtpd_sasl_path = private/auth
+smtpd_sasl_path = smtpd
 
 # Virtual mailboxes
-virtual_alias_maps = mysql:/etc/postfix/mysql_virtual_alias_maps.cf
-virtual_mailbox_domains = mysql:/etc/postfix/mysql_virtual_domain_maps.cf
-virtual_mailbox_maps = mysql:/etc/postfix/mysql_virtual_mailbox_maps.cf
-relay_domains = mysql:/etc/postfix/mysql_relay_domain_maps.cf
+virtual_alias_maps = mysql:/etc/postfix/tables/mysql_virtual_alias_maps.cf
+virtual_mailbox_domains = mysql:/etc/postfix/tables/mysql_virtual_domains_maps.cf
+virtual_mailbox_maps = mysql:/etc/postfix/tables/mysql_virtual_mailbox_maps.cf
 
 # Misc
 smtpd_reject_unlisted_sender = no
@@ -97,3 +89,5 @@ content_filter = smtp-amavis:[127.0.0.1]:10024
 # 50 MB
 message_size_limit = 52428800
 mailbox_size_limit = 0
+
+virtual_mailbox_limit = 512000000000

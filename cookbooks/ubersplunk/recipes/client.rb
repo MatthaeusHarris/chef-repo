@@ -9,6 +9,11 @@ include_recipe 'chef-vault'
 
 splunk_auth_info = chef_vault_item(:vault, "splunk_#{node.chef_environment}")['auth']
 
+
+apt_package "sysstat" do
+	action	:install
+end
+
 nix_app_inputs = [
 	"cpu.sh",
 	"df.sh",
@@ -74,8 +79,4 @@ nix_app_inputs.each do |input|
 		action		:nothing
 		notifies	:restart, 'service[splunk]', :delayed
 	end
-end
-
-apt_package "sysstat" do
-	action	:install
 end
