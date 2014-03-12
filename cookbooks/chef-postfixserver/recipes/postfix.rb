@@ -22,6 +22,12 @@
   end
 end
 
+execute "remove_sendmail_cronjob" do
+  only_if   { File.exists?(File.join('', 'etc', 'cron.d', 'sendmail')) }
+  command   "rm -f /etc/cron.d/sendmail"
+  notifies  :restart, "service[cron]"
+end  
+
 group "postfix" do
   action  :create
 end
