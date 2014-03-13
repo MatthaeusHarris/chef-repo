@@ -54,6 +54,7 @@ virtual_uid_maps = static:<%= node[:etc][:passwd][:postfix][:uid] %>
 # SMTP Auth
 smtpd_sasl_auth_enable = yes
 smtpd_sasl_path = smtpd
+smtp_sasl_password_maps = 
 
 # Virtual mailboxes
 virtual_alias_maps = mysql:/etc/postfix/tables/mysql_virtual_alias_maps.cf
@@ -67,7 +68,8 @@ smtpd_sender_restrictions = reject_non_fqdn_sender
 smtpd_recipient_restrictions=
   permit_mynetworks,
   permit_sasl_authenticated,
-  reject_unauth_destination
+  reject_unauth_destination, 
+  reject_rbl_client=zen.spamhaus.org
  
 # smtpd TLS
 smtpd_tls_cert_file=/etc/ssl/certs/ssl-cert-snakeoil.pem
@@ -76,8 +78,6 @@ smtpd_use_tls=yes
 smtpd_tls_session_cache_database = btree:${queue_directory}/smtpd_scache
 smtp_tls_session_cache_database = btree:${queue_directory}/smtp_scache
 
-# Spam rejection
-reject_rbl_client = zen.spamhaus.org
 
 # Amavis, SpamAssassin, ClamAV
 biff = no

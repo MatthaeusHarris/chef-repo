@@ -28,6 +28,10 @@ execute "remove_sendmail_cronjob" do
   notifies  :restart, "service[cron]"
 end  
 
+service "cron" do
+  action  :nothing
+end
+
 group "postfix" do
   action  :create
 end
