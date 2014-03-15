@@ -1,0 +1,22 @@
+<IfDefine !MODPERL2> 
+   PerlFreshRestart On
+</IfDefine>
+PerlTaintCheck Off
+    
+Listen 8082
+
+PerlRequire /usr/local/nictool/server/lib/nictoolserver.conf
+
+<VirtualHost *:8082>
+    KeepAlive Off
+    <Location />
+        SetHandler perl-script
+        PerlResponseHandler NicToolServer
+    </Location>
+    <Location /soap>
+        SetHandler perl-script
+        PerlResponseHandler Apache::SOAP
+        #PerlResponseHandler Apache2::SOAP
+        PerlSetVar dispatch_to "/usr/local/nictool/server, NicToolServer::SOAP"
+    </Location>
+</VirtualHost>

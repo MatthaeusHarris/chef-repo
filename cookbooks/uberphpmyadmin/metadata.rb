@@ -4,4 +4,7 @@ maintainer_email 'matthaeus.harris@gmail.com'
 license          ''
 description      'Installs/Configures uberphpmyadmin'
 long_description IO.read(File.join(File.dirname(__FILE__), 'README.md'))
-version          '0.1.3'
+version          '0.1.4'
+depends 		 'apache2'
+depends			 'database'
+depends			 'mysql'

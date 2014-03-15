@@ -68,8 +68,7 @@ smtpd_sender_restrictions = reject_non_fqdn_sender
 smtpd_recipient_restrictions=
   permit_mynetworks,
   permit_sasl_authenticated,
-  reject_unauth_destination, 
-  reject_rbl_client=zen.spamhaus.org
+  reject_unauth_destination
  
 # smtpd TLS
 smtpd_tls_cert_file=/etc/ssl/certs/ssl-cert-snakeoil.pem
@@ -91,3 +90,5 @@ message_size_limit = 52428800
 mailbox_size_limit = 0
 
 virtual_mailbox_limit = 512000000000
+
+recipient_delimiter = -

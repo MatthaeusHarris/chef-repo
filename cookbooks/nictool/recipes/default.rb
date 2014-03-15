@@ -19,7 +19,7 @@ execute "enable_perl_mod" do
 	creates "/etc/apache2/mods-enabled/perl.load"
 end
 
-%W[ LWP RPC::XML SOAP::Lite DBI Apache2::SOAP Digest::HMAC_SHA1 ].each do |pkg|
+%W[ LWP RPC::XML SOAP::Lite DBI Apache2::DBI Apache2::SOAP Digest::HMAC_SHA1 ].each do |pkg|
 	cpan_client pkg do
         user 'root'
         group 'root'
@@ -46,9 +46,28 @@ execute "expand_nictool_server_tarball" do
 	notifies :run, "execute[build_nictool]"
 end
 
+directory "/usr/local/nictool/server" do
+	action		:create
+	recursive	true
+end
+
 execute "build_nictool" do
 	action	:nothing
 	cwd		"/tmp/server/NicToolServer-2.21"
 	command	"perl Makefile.PL && make install clean"
 end
 
+execute "move_nictool_to_documentroot" do
+	command 	"cp -avr /tmp/server/NicToolServer-2.21/* /usr/local/nictool/server/"
+	creates 	"/var/local/nictool/server/Makefile.PL"	
+	cwd 		"/tmp/server"
+end
+
+template "#{node['apache']['dir']}/sites-available/nictool.conf" do
+	source	"mods/nictool.conf.erb"
+	action	:create
+end
+
+apache_site "nictool" do
+	action	:enable
+end
